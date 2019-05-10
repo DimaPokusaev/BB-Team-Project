@@ -19,10 +19,11 @@ namespace BrickBreaker
         //player1 button control keys
         Boolean leftArrowDown, rightArrowDown, ADown, DDown;
 
-        // TODO: Work on block collision
+        // player2 buttin controll
+        Boolean rightArrowDown2C, leftArrowDown2Z;
 
         // Paddle and Ball objects
-        public static Paddle paddle;
+        public static Paddle paddle, paddle2;
         public static List<Ball> ballList = new List<Ball>();
         public static List<Ball> removeBalls = new List<Ball>();
         public static int paddleWidth = 140;
@@ -44,7 +45,6 @@ namespace BrickBreaker
         SolidBrush powerupsbsBrush = new SolidBrush(Color.Orange);
 
         // Brushes
-        SolidBrush paddleBrush = new SolidBrush(Color.White);
         SolidBrush ballBrush = new SolidBrush(Color.White);
         SolidBrush blockBrush = new SolidBrush(Color.Red);
         Pen linePen = new Pen(Color.White);
@@ -70,7 +70,6 @@ namespace BrickBreaker
 
         // angle points for the line aim
         Point p1 = new Point(1,1), p2 = new Point(1, 1);
-        public string direction = "left";
 
         // font and brush for text
         Font textFont = new Font("Verdana", 20, FontStyle.Regular);
@@ -84,9 +83,6 @@ namespace BrickBreaker
         public GameScreen(bool multiplayer = false)
         {
             InitializeComponent();
-            //OnStart(); 
-            if (multiplayer)
-                player2Lives = 3;
         }
 
         public void levelLoad()
@@ -165,7 +161,7 @@ namespace BrickBreaker
             levelLoad();
 
             //set all button presses to false.
-            leftArrowDown = rightArrowDown = false;
+            leftArrowDown = rightArrowDown = rightArrowDown2C = leftArrowDown2Z = false;
 
             // reset score
             score = 0;
@@ -174,7 +170,17 @@ namespace BrickBreaker
             int paddleX = ((this.Width / 2) - (paddleWidth / 2));
             int paddleY = 700;
             int paddleSpeed = 16;
-            paddle = new Paddle(paddleX, paddleY, paddleWidth, paddleHeight, paddleSpeed, Color.White);
+            if (Form1.multi)
+            {
+                paddle2 = new Paddle(paddleX, paddleY, paddleWidth, paddleHeight, paddleSpeed, Color.Brown);
+                paddle = new Paddle(paddleX, paddleY - 60, paddleWidth, paddleHeight, paddleSpeed, Color.White);
+            }
+            else
+            {
+                paddle = new Paddle(paddleX, paddleY, paddleWidth, paddleHeight, paddleSpeed, Color.White);
+            }
+
+
 
             // setup starting ball values
             int ballX = ((paddle.x - ballSize) + (paddle.width / 2));
@@ -209,16 +215,20 @@ namespace BrickBreaker
             {
                 case Keys.Left:
                     leftArrowDown = true;
-                    direction = "left"; 
                     break;
                 case Keys.Right:
                     rightArrowDown = true;
-                    direction = "right";
                     break;
                 case Keys.Space:
                     start = true;
                     break;
                 case Keys.Escape:
+                    break;
+                case Keys.Z:
+                    leftArrowDown2Z = true;
+                    break;
+                case Keys.C:
+                    rightArrowDown2C = true;
                     break;
                 default:
                     break;
@@ -291,6 +301,12 @@ namespace BrickBreaker
                 case Keys.Right:
                     rightArrowDown = false;
                     break;
+                case Keys.Z:
+                    leftArrowDown2Z = false;
+                    break;
+                case Keys.C:
+                    rightArrowDown2C = false;
+                    break;
                 default:
                     break;
             }
@@ -312,6 +328,19 @@ namespace BrickBreaker
                 paddle.Move("right");
             }
 
+            if (Form1.multi)
+            {
+                if (leftArrowDown2Z && paddle.x > 0)
+                {
+                    paddle2.Move("left");
+                }
+                if (rightArrowDown2C && paddle.x < (this.Width - paddle.width))
+                {
+                    paddle2.Move("right");
+                }
+            }
+
+
             if (start)
             {
                 foreach (Ball b in ballList)
@@ -328,7 +357,7 @@ namespace BrickBreaker
                     // Check for ball hitting bottom of screen and if there is only one ball
                     Rectangle curball = new Rectangle(Convert.ToInt32(b.x), Convert.ToInt32(b.y), b.size, b.size);
 
-                    if((b.BottomCollision(this, paddle) && ballList.Count == 1)|| (curball.IntersectsWith(new Rectangle(0, paddle.y + 9, this.Width, 10))))
+                    if((((b.BottomCollision(this, paddle) && ballList.Count == 1) || (curball.IntersectsWith(new Rectangle(0, paddle.y + 9 + 60, this.Width, 10)))) ||(Form1.multi && ((b.BottomCollision(this, paddle2) && ballList.Count == 1)|| (curball.IntersectsWith(new Rectangle(0, paddle.y + 9 + 60, this.Width, 10)))))))
                     {
                         // decrease player 1 lives
                         player1Lives--;
@@ -373,6 +402,10 @@ namespace BrickBreaker
 
                     // Check for collision of ball with paddle, (incl. paddle movement)
                     b.PaddleCollision(paddle, leftArrowDown, rightArrowDown);
+                    if (Form1.multi)
+                    {
+                        b.PaddleCollision(paddle2, leftArrowDown2Z, rightArrowDown2C);
+                    }
 
                     if (currentlevel.Count == 0)
                     {
@@ -662,7 +695,15 @@ namespace BrickBreaker
         public void GameScreen_Paint(object sender, PaintEventArgs e)
         {
             // Draws paddle
+            SolidBrush paddleBrush = new SolidBrush(paddle.colour);
             e.Graphics.FillRectangle(paddleBrush, paddle.x, paddle.y, paddle.width, paddle.height);
+            if (Form1.multi)
+            {
+                paddleBrush = new SolidBrush(paddle2.colour);
+                e.Graphics.FillRectangle(paddleBrush, paddle2.x, paddle2.y, paddle2.width, paddle2.height);
+            }
+
+
 
             // Draws currentlevel
             foreach (Block b in currentlevel)

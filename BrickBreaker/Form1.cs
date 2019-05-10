@@ -23,6 +23,7 @@ namespace BrickBreaker
         /// </summary>
         public static SoundPlayer SoundPlayer = new SoundPlayer();
         public static GameScreen currentGame;
+        public static bool multi = false;
         public Form1()
         {
             InitializeComponent();

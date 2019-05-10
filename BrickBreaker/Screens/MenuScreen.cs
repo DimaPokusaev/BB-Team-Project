@@ -184,5 +184,12 @@ namespace BrickBreaker
 
             hs.Location = new Point((form.Width - hs.Width) / 2, (form.Height - hs.Height) / 2);
         }
+
+        private void twoplayer_Click(object sender, EventArgs e)
+        {
+            Form1.multi = true;
+            var form = FindForm() as Form1;
+            form.ChangeScreen(this, new GameScreen());
+        }
     }
 }
