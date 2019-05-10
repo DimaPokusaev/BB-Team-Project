@@ -26,21 +26,34 @@ namespace BrickBreaker
         public Form1()
         {
             InitializeComponent();
+            loadScoresRK();
             Directory.SetCurrentDirectory(Program.FilePath);//Set the program to put files in the created directory
             Size = new Size(Screen.PrimaryScreen.WorkingArea.Width, Screen.PrimaryScreen.WorkingArea.Height);
             Location = new Point(0, 0);
         }
 
-        /// <summary>
-        /// Sets the screen height and sizes
-        /// </summary>
-        /// <param name="c"></param>
-        [Obsolete("TODO Game Screen scales incorrectly")]
-        public void ConfigScreen(ref UserControl c)
+        //testing
+        public static void loadScoresRK()
         {
-            c.Width = (Width / 3) * 2;
-            c.Height = (Height / 3) * 2;
-            c.Location = new Point(Width / 2 - c.Width /2, Height / 2  - c.Height /2);
+            //creating Xml reader file 
+            XmlReader reader = XmlReader.Create("Resources/HighScores.xml", null);
+            string newScoreString;
+
+            //basically highScore1String is going to be highScore #1...and on...etc
+            //plan: "highScores" should only contain 5 high "scores"
+
+            while (reader.Read())
+            {
+                if (reader.NodeType == XmlNodeType.Text)
+                {
+                    newScoreString = reader.ReadString();
+
+                    HighScore newScore = new HighScore(newScoreString);
+                    Form1.highScores.Add(newScore);
+                }
+            }
+
+            reader.Close();
         }
 
         /// <summary>
@@ -81,12 +94,24 @@ namespace BrickBreaker
         /// <param name="add"></param>
         public void ChangeScreen(UserControl remove, UserControl add)
         {
-            ConfigScreen(ref add);
-            Controls.Add(add);
-            Controls.Remove(remove);
             if(remove != null)
+            {
+                Controls.Remove(remove);
                 remove.Dispose();
+            }
+            add.Size = new Size(Width / 3 * 2, Height / 3 * 2);
+            add.Location = new Point(Width / 6, Height / 6);
+            Controls.Add(add);
+        }
 
+        public static void CenterButtons(UserControl userControl, int startSpace = 0, int spaceBetween = 50)
+        {
+            int lastHeight = startSpace + spaceBetween;
+            foreach (var Control in userControl.Controls.OfType<Button>())
+            {
+                Control.Location = new Point(userControl.Width / 2 - Control.Width / 2, lastHeight);
+                lastHeight += spaceBetween + Control.Height;
+            }
         }
 
         /// <summary>
