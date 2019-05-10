@@ -28,34 +28,12 @@ namespace BrickBreaker
             }
         }
         //testing
-        public void loadScoresRK()
-        {
-            //creating Xml reader file 
-            XmlReader reader = XmlReader.Create("Resources/HighScores.xml", null);
-            string newScoreString;
-
-            //basically highScore1String is going to be highScore #1...and on...etc
-            //plan: "highScores" should only contain 5 high "scores"
-
-            while (reader.Read())
-            {
-                if (reader.NodeType == XmlNodeType.Text)
-                {
-                    newScoreString = reader.ReadString();
-
-                    HighScore newScore = new HighScore(newScoreString);
-                    Form1.highScores.Add(newScore);
-                }
-            }
-
-            reader.Close();
-        }
+        
         private static int index = 0;
         private List<Label> labels = new List<Label>();
         public MenuScreen()
         {
             InitializeComponent();
-            loadScoresRK();
             
             //compare the scores
 
@@ -152,12 +130,12 @@ namespace BrickBreaker
         private void MenuScreen_Load(object sender, EventArgs e)
         {
             var ratio = 6;
-            for (int i = 0; i < labels.Count; i++)
-            {
-                labels[i].Size = new Size(Width / ratio + 125, Height / ratio);
-                var space = (Height /4) - labels[i].Height + (100 * i);
-                labels[i].Location = new Point((Width / 2) - (labels[i].Width / 2), space);
-            }
+            //for (int i = 0; i < labels.Count; i++)
+            //{
+            //    labels[i].Size = new Size(Width / ratio + 125, Height / ratio);
+            //    var space = (Height /4) - labels[i].Height + (100 * i);
+            //    labels[i].Location = new Point((Width / 2) - (labels[i].Width / 2), space);
+            //}
         }
 
         /// <summary>

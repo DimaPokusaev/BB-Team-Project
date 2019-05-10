@@ -544,6 +544,7 @@ namespace BrickBreaker
                     {
                         if (p.type == "3")
                         {
+                            break;
                             Random randGen = new Random();
                             int x, y;
 
@@ -553,8 +554,6 @@ namespace BrickBreaker
                             //activate powerup
                             ballList.Add(new Ball(x, y, xSpeed, ySpeed, ballSize, 1, -1));
                             ballList.Add(new Ball(y, x, xSpeed, ySpeed, ballSize, 1, -1));
-
-                            break;
                         }
                         else if (p.type == "L")
                         {
@@ -683,7 +682,7 @@ namespace BrickBreaker
             {
                 if (p.type == "3")
                 {
-                    e.Graphics.FillRectangle(powerups3Brush, p.x, p.y, p.width, p.height);
+                    //e.Graphics.FillRectangle(powerups3Brush, p.x, p.y, p.width, p.height);
                 }
                 else if (p.type == "L")
                 {
@@ -704,7 +703,7 @@ namespace BrickBreaker
             }
 
             // Draw lives and font
-            e.Graphics.DrawString("Lives: " + player1Lives.ToString(), textFont, sb, new Point(25, this.Height - 25));
+            e.Graphics.DrawString("Lives: " + player1Lives.ToString(), textFont, sb, new Point(25, this.Height - 50));
             e.Graphics.DrawString(score.ToString(), textFont, sb, new Point(25, 75));
 
             // draw line aim
@@ -715,8 +714,8 @@ namespace BrickBreaker
             }
 
             // Draw lives and score
-            e.Graphics.DrawString("angle position: " + angleposition.ToString(), textFont, sb, new Point(25, this.Height - 100));
-            e.Graphics.DrawString("block number: " + currentlevel.Count().ToString(), textFont, sb, new Point(this.Width - 300, this.Height - 100));
+            //e.Graphics.DrawString("angle position: " + angleposition.ToString(), textFont, sb, new Point(25, this.Height - 100));
+           // e.Graphics.DrawString("block number: " + currentlevel.Count().ToString(), textFont, sb, new Point(this.Width - 300, this.Height - 100));
 
             switch (player1Lives)
             {

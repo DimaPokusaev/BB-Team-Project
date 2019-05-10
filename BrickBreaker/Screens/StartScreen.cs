@@ -32,11 +32,11 @@ namespace BrickBreaker
         {
             if (i % 2 == 0)
             {
-                anyButtonPB.Image = new Bitmap(Properties.Resources.negitive);
+                //anyButtonPB.Image = System.Drawing.Image.FromFile("Resources/Titles/negative.jpg");
             }
             else
             {
-                anyButtonPB.Image = new Bitmap(Properties.Resources.pressAnyButton);
+                //anyButtonPB.Image = System.Drawing.Image.FromFile("Resources/Titles/pressAnyButton.jpg");
             }
             i++;
             Refresh();
